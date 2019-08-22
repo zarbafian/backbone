@@ -32,16 +32,16 @@ public class SessionManager {
         // expiration
         ZonedDateTime expiration = ZonedDateTime.now().plus(SESSION_DURATION_VALUE, SESSION_DURATION_UNIT);
 
-        // bearer token
-        UserToken bearerToken = new UserToken(accountEntity.getUsername(), expiration, accountEntity.getRole().getValue());
+        // user token
+        UserToken userToken = new UserToken(accountEntity.getUsername(), expiration, accountEntity.getRole().getValue());
 
-        validSessions.put(sessionId, bearerToken);
+        validSessions.put(sessionId, userToken);
 
-        LOGGER.debug("Created new session, sessionId={}, token={}", sessionId, bearerToken);
+        LOGGER.debug("Created new session, sessionId={}, token={}", sessionId, userToken);
 
         return new UserSession(
                 sessionId,
-                bearerToken
+                userToken
         );
     }
 
