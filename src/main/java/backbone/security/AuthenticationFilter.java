@@ -4,23 +4,20 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.servlet.*;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.function.Function;
-import java.util.stream.Collectors;
+import java.util.*;
 
 public class AuthenticationFilter implements Filter {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AuthenticationFilter.class);
 
-    private String authenticationHeader;
+    private String authenticationCookie;
 
-    public AuthenticationFilter(String authenticationHeader) {
-        this.authenticationHeader = authenticationHeader;
+    public AuthenticationFilter(String authenticationCookie) {
+        this.authenticationCookie = authenticationCookie;
     }
 
     @Override
@@ -29,57 +26,42 @@ public class AuthenticationFilter implements Filter {
         HttpServletRequest request = (HttpServletRequest) servletRequest;
         HttpServletResponse response = (HttpServletResponse) servletResponse;
 
-        Map<String, List<String>> headersMap = Collections
-                .list(request.getHeaderNames())
-                .stream()
-                .collect(Collectors.toMap(
-                        Function.identity(),
-                        h -> Collections.list(request.getHeaders(h))
-                ));
+        Cookie[] cookies = request.getCookies();
+
+        Optional<Cookie> optionalCookie = Arrays.stream(cookies).filter(cookie -> this.authenticationCookie.equals(cookie.getName())).findFirst();
 
         LOGGER.debug("🔒 Attempting authentication");
 
-        if(!headersMap.containsKey(this.authenticationHeader)) {
-            // no authentication header
-            LOGGER.debug("🚫 Authentication failure: no authentication header");
-            response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
-            return;
-        }
+        if(optionalCookie.isPresent()) {
 
-        List<String> authHeaders = headersMap.get(this.authenticationHeader);
+            // cookie is present
+            Cookie cookie = optionalCookie.get();
+            String token = cookie.getValue();
 
-        if(authHeaders.isEmpty()) {
-            // no authentication header
-            LOGGER.debug("🚫 Authentication failure: empty authentication header");
-            response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
-            return;
-        }
+            if(token == null || token.isBlank()) {
+                // empty authentication header
+                LOGGER.debug("🚫 Authentication failure: empty authentication cookie");
+                response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
+                return;
+            }
 
-        if(authHeaders.size() != 1) {
-            // too many authentication headers
-            LOGGER.debug("🚫 Authentication failure: too many authentication headers");
-            response.sendError(HttpServletResponse.SC_BAD_REQUEST);
-            return;
-        }
-
-        String token = authHeaders.get(0);
-
-        if(token == null || token.isBlank()) {
-            // no authentication header
-            LOGGER.debug("🚫 Authentication failure: empty authentication header");
-            response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
-            return;
-        }
-
-        if(token.equals("ABCD")) {
-            LOGGER.debug("🔑 Authentication success");
-            filterChain.doFilter(servletRequest, servletResponse);
+            if(token.equals("ABCD")) {// TODO
+                LOGGER.debug("🔑 Authentication success");
+                filterChain.doFilter(servletRequest, servletResponse);
+            }
+            else {
+                // invalid authentication header
+                LOGGER.debug("🚫 Authentication failure: invalid authentication header");
+                response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
+                return;
+            }
         }
         else {
-            // invalid authentication header
-            LOGGER.debug("🚫 Authentication failure: invalid authentication header");
+            // no authentication header
+            LOGGER.error("🚫 Authentication failure: no authentication cookie");
             response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
             return;
         }
+
     }
 }

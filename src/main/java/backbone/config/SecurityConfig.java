@@ -13,15 +13,15 @@ public class SecurityConfig {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(SecurityConfig.class);
 
-    @Value("${security.authentication.header}")
-    private String authenticationHeader;
+    @Value("${security.authentication.cookie}")
+    private String authenticationCookie;
 
     @Bean
     public FilterRegistrationBean<AuthenticationFilter> authenticationFilter(){
 
         FilterRegistrationBean<AuthenticationFilter> registrationBean = new FilterRegistrationBean<>();
 
-        registrationBean.setFilter(new AuthenticationFilter(authenticationHeader));
+        registrationBean.setFilter(new AuthenticationFilter(authenticationCookie));
         registrationBean.addUrlPatterns("/auth/*");
 
         return registrationBean;
