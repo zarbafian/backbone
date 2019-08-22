@@ -1,12 +1,14 @@
 package backbone.security;
 
+import java.time.ZonedDateTime;
+
 public class BearerToken {
 
     private String user;
-    private long expiration;
+    private ZonedDateTime expiration;
     private String role;
 
-    public BearerToken(String user, long expiration, String role) {
+    public BearerToken(String user, ZonedDateTime expiration, String role) {
         this.user = user;
         this.expiration = expiration;
         this.role = role;
@@ -20,11 +22,11 @@ public class BearerToken {
         this.user = user;
     }
 
-    public long getExpiration() {
+    public ZonedDateTime getExpiration() {
         return expiration;
     }
 
-    public void setExpiration(long expiration) {
+    public void setExpiration(ZonedDateTime expiration) {
         this.expiration = expiration;
     }
 
@@ -34,5 +36,14 @@ public class BearerToken {
 
     public void setRole(String role) {
         this.role = role;
+    }
+
+    @Override
+    public String toString() {
+        return "BearerToken{" +
+                "user='" + user + '\'' +
+                ", expiration=" + expiration +
+                ", role='" + role + '\'' +
+                '}';
     }
 }

@@ -1,4 +1,6 @@
-package backbone;
+package backbone.entity;
+
+import backbone.security.AccountRole;
 
 import java.time.LocalDateTime;
 
@@ -7,6 +9,7 @@ public class AccountEntity {
     private Long id;
     private String username;
     private String password;
+    private AccountRole role;
     private boolean active;
     private boolean deleted;
     private LocalDateTime creationDate;
@@ -34,6 +37,14 @@ public class AccountEntity {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public AccountRole getRole() {
+        return role;
+    }
+
+    public void setRole(AccountRole role) {
+        this.role = role;
     }
 
     public boolean isActive() {

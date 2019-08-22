@@ -16,8 +16,11 @@ public class AuthenticationFilter implements Filter {
 
     private String authenticationCookie;
 
-    public AuthenticationFilter(String authenticationCookie) {
+    private SessionManager sessionManager;
+
+    public AuthenticationFilter(String authenticationCookie, SessionManager sessionManager) {
         this.authenticationCookie = authenticationCookie;
+        this.sessionManager = sessionManager;
     }
 
     @Override
@@ -45,7 +48,7 @@ public class AuthenticationFilter implements Filter {
                 return;
             }
 
-            if(token.equals("ABCD")) {// TODO
+            if(sessionManager.isValid(token)) {
                 LOGGER.debug("🔑 Authentication success");
                 filterChain.doFilter(servletRequest, servletResponse);
             }

@@ -1,21 +1,32 @@
 package backbone.web;
 
 import backbone.LoginRequest;
+import backbone.entity.AccountEntity;
+import backbone.security.AuthenticationManager;
+import backbone.security.SessionManager;
+import backbone.security.UserSession;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
-import java.time.temporal.ChronoUnit;
 
 @RestController
 public class LoginController {
+
+    @Autowired
+    private AuthenticationManager authenticationManager;
+
+    @Autowired
+    private SessionManager sessionManager;
+
+    @Value("${security.cookie.secure}")
+    private boolean secure;
 
     @RequestMapping(
             value = "/login",
@@ -27,16 +38,48 @@ public class LoginController {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
 
-        if("toto".equals(request.getUsername()) && "toto".equals(request.getPassword())) {
-            HttpHeaders responseHeaders = new HttpHeaders();
-            //responseHeaders.set("Set-Cookie", "idd=a3fWa; Expires=Wed, 21 Oct 2015 07:28:00 CEST; Secure; HttpOnly");
+        AccountEntity entity = authenticationManager.authenticate(request.getUsername(), request.getPassword());
 
-            String expiry = ZonedDateTime.now().plus(10, ChronoUnit.MINUTES).format(DateTimeFormatter.RFC_1123_DATE_TIME);
-            responseHeaders.set("Set-Cookie", "sid=ABCD; Expires=" + expiry + "; HttpOnly"); // TODO: Secure
+        if(entity != null) {
+
+            UserSession userSession = sessionManager.createSession(entity);
+
+            HttpHeaders responseHeaders = new HttpHeaders();
+            String cookieValue = getCookie(userSession.getSessionId(), userSession.getBearerToken().getExpiration());
+            responseHeaders.set("Set-Cookie", cookieValue);
+
             return ResponseEntity.ok().headers(responseHeaders).build();
         }
         else {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
+    }
+
+    @RequestMapping(
+            value = "/logout",
+            method = RequestMethod.POST
+    )
+    public ResponseEntity<Void> logout(@CookieValue(name = "${security.cookie.name}", required = false) String sessionId) {
+
+        if(sessionId == null || sessionId.isBlank()) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+
+        sessionManager.invalidateSession(sessionId);
+
+        HttpHeaders responseHeaders = new HttpHeaders();
+        ZonedDateTime expiration = ZonedDateTime.of(1970, 1, 1, 0, 0, 0, 0, ZoneId.of("UTC"));
+        String cookieValue = getCookie("", expiration);
+        responseHeaders.set("Set-Cookie", cookieValue);
+
+        return ResponseEntity.ok().headers(responseHeaders).build();
+    }
+
+    private String getCookie(String sid, ZonedDateTime expiration) {
+
+        String expiry = expiration.format(DateTimeFormatter.RFC_1123_DATE_TIME);
+        String value = "sid=" + sid + "; Expires=" + expiry + (secure ? "; Secure" : "") + "; HttpOnly";
+
+        return value;
     }
 }

@@ -1,7 +1,8 @@
 package backbone.dao;
 
-import backbone.AccountEntity;
+import backbone.entity.AccountEntity;
 
 public interface AccountDao {
-    AccountEntity findByUsername();
+
+    AccountEntity findByUsername(String username);
 }

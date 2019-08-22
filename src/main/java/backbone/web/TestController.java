@@ -1,6 +1,5 @@
 package backbone.web;
 
-import backbone.security.BearerToken;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -8,20 +7,17 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.time.LocalDateTime;
-import java.time.ZoneOffset;
-
 @RestController
 public class TestController {
 
     @RequestMapping(
-            value = "/auth/a",
+            value = "/api/a",
             method = RequestMethod.GET,
             produces = MediaType.APPLICATION_JSON_VALUE
     )
-    public ResponseEntity<BearerToken> protectedEndpoint() {
+    public ResponseEntity<String> protectedEndpoint() {
 
-        return new ResponseEntity<>(new BearerToken("protege", LocalDateTime.now().toEpochSecond(ZoneOffset.of("+02")), "admin"), HttpStatus.OK);
+        return new ResponseEntity<>("This is endpoint is protected", HttpStatus.OK);
     }
 
     @RequestMapping(
@@ -29,8 +25,8 @@ public class TestController {
             method = RequestMethod.GET,
             produces = MediaType.APPLICATION_JSON_VALUE
     )
-    public ResponseEntity<BearerToken> publicEndpoint() {
+    public ResponseEntity<String> publicEndpoint() {
 
-        return new ResponseEntity<>(new BearerToken("public", LocalDateTime.now().toEpochSecond(ZoneOffset.of("+02")), "user"), HttpStatus.OK);
+        return new ResponseEntity<>("This is endpoint is public", HttpStatus.OK);
     }
 }
