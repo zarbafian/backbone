@@ -1,15 +1,12 @@
 package backbone.dao;
 
-import backbone.entity.AccountEntity;
-import backbone.security.AccountRole;
+import backbone.entity.Account;
 import org.springframework.stereotype.Component;
-
-import java.time.LocalDateTime;
 
 @Component
 public class AccountDaoBean implements AccountDao {
 
-    public AccountEntity findByUsername(String username) {
+    public Account findByUsername(String username) {
 
         /*
         if("toto".equals(username)) {

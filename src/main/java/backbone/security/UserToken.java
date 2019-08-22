@@ -2,13 +2,13 @@ package backbone.security;
 
 import java.time.ZonedDateTime;
 
-public class BearerToken {
+public class UserToken {
 
     private String user;
     private ZonedDateTime expiration;
     private String role;
 
-    public BearerToken(String user, ZonedDateTime expiration, String role) {
+    public UserToken(String user, ZonedDateTime expiration, String role) {
         this.user = user;
         this.expiration = expiration;
         this.role = role;
@@ -40,7 +40,7 @@ public class BearerToken {
 
     @Override
     public String toString() {
-        return "BearerToken{" +
+        return "UserToken{" +
                 "user='" + user + '\'' +
                 ", expiration=" + expiration +
                 ", role='" + role + '\'' +

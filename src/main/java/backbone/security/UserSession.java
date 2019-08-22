@@ -3,11 +3,11 @@ package backbone.security;
 public class UserSession {
 
     private String sessionId;
-    private BearerToken bearerToken;
+    private UserToken userToken;
 
-    public UserSession(String sessionId, BearerToken bearerToken) {
+    public UserSession(String sessionId, UserToken userToken) {
         this.sessionId = sessionId;
-        this.bearerToken = bearerToken;
+        this.userToken = userToken;
     }
 
     public String getSessionId() {
@@ -18,11 +18,11 @@ public class UserSession {
         this.sessionId = sessionId;
     }
 
-    public BearerToken getBearerToken() {
-        return bearerToken;
+    public UserToken getUserToken() {
+        return userToken;
     }
 
-    public void setBearerToken(BearerToken bearerToken) {
-        this.bearerToken = bearerToken;
+    public void setUserToken(UserToken userToken) {
+        this.userToken = userToken;
     }
 }

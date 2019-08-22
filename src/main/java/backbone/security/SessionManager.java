@@ -1,6 +1,6 @@
 package backbone.security;
 
-import backbone.entity.AccountEntity;
+import backbone.entity.Account;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,9 +22,9 @@ public class SessionManager {
     @Autowired
     private SessionIdGenerator sessionIdGenerator;
 
-    private Map<String, BearerToken> validSessions = new HashMap<>();
+    private Map<String, UserToken> validSessions = new HashMap<>();
 
-    public UserSession createSession(AccountEntity accountEntity) {
+    public UserSession createSession(Account accountEntity) {
 
         // session ID
         String sessionId = sessionIdGenerator.getSessionId();
@@ -33,7 +33,7 @@ public class SessionManager {
         ZonedDateTime expiration = ZonedDateTime.now().plus(SESSION_DURATION_VALUE, SESSION_DURATION_UNIT);
 
         // bearer token
-        BearerToken bearerToken = new BearerToken(accountEntity.getUsername(), expiration, accountEntity.getRole().getValue());
+        UserToken bearerToken = new UserToken(accountEntity.getUsername(), expiration, accountEntity.getRole().getValue());
 
         validSessions.put(sessionId, bearerToken);
 
@@ -52,7 +52,7 @@ public class SessionManager {
             return false;
         }
 
-        BearerToken retrievedToken = validSessions.get(sessionId);
+        UserToken retrievedToken = validSessions.get(sessionId);
 
         if(ZonedDateTime.now().isAfter(retrievedToken.getExpiration())) {
             LOGGER.trace("Session is expired, sessionId={}, token={}", sessionId, retrievedToken.getExpiration());
@@ -70,7 +70,7 @@ public class SessionManager {
             LOGGER.debug("Could not invalidate session as it did not exist, sessionId={}");
         }
         else {
-            BearerToken removedSession = validSessions.remove(sessionId);
+            UserToken removedSession = validSessions.remove(sessionId);
             LOGGER.debug("Session invalidated, sessionId={}, token={}", sessionId, removedSession);
         }
     }

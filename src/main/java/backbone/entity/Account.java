@@ -4,7 +4,7 @@ import backbone.security.AccountRole;
 
 import java.time.LocalDateTime;
 
-public class AccountEntity {
+public class Account {
 
     private Long id;
     private String username;

@@ -1,10 +1,11 @@
 package backbone.web;
 
 import backbone.LoginRequest;
-import backbone.entity.AccountEntity;
+import backbone.entity.Account;
 import backbone.security.AuthenticationManager;
 import backbone.security.SessionManager;
 import backbone.security.UserSession;
+import backbone.security.UserToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
@@ -32,23 +33,23 @@ public class LoginController {
             value = "/login",
             method = RequestMethod.POST
     )
-    public ResponseEntity<Void> login(@RequestBody LoginRequest request) {
+    public ResponseEntity<UserToken> login(@RequestBody LoginRequest request) {
 
         if(request.getUsername() == null || request.getPassword() == null || request.getUsername().isBlank() || request.getPassword().isBlank()) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
 
-        AccountEntity entity = authenticationManager.authenticate(request.getUsername(), request.getPassword());
+        Account entity = authenticationManager.authenticate(request.getUsername(), request.getPassword());
 
         if(entity != null) {
 
             UserSession userSession = sessionManager.createSession(entity);
 
             HttpHeaders responseHeaders = new HttpHeaders();
-            String cookieValue = getCookie(userSession.getSessionId(), userSession.getBearerToken().getExpiration());
+            String cookieValue = getCookie(userSession.getSessionId(), userSession.getUserToken().getExpiration());
             responseHeaders.set("Set-Cookie", cookieValue);
 
-            return ResponseEntity.ok().headers(responseHeaders).build();
+            return ResponseEntity.ok().headers(responseHeaders).body(userSession.getUserToken());
         }
         else {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);

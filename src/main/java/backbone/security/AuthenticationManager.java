@@ -1,6 +1,6 @@
 package backbone.security;
 
-import backbone.entity.AccountEntity;
+import backbone.entity.Account;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
@@ -8,11 +8,11 @@ import java.time.LocalDateTime;
 @Component
 public class AuthenticationManager {
 
-    public AccountEntity authenticate(String username, String password) {
+    public Account authenticate(String username, String password) {
 
         if("toto".equals(username) && "toto".equals(password)) {
 
-            AccountEntity entity = new AccountEntity();
+            Account entity = new Account();
             entity.setId(1L);
             entity.setActive(true);
             entity.setDeleted(false);
@@ -25,7 +25,7 @@ public class AuthenticationManager {
         }
         else if("titi".equals(username) && "titi".equals(password)) {
 
-            AccountEntity entity = new AccountEntity();
+            Account entity = new Account();
             entity.setId(2L);
             entity.setActive(true);
             entity.setDeleted(false);
