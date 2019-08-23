@@ -45,11 +45,11 @@ public class SessionManager {
         );
     }
 
-    public boolean isValid(String sessionId) {
+    public UserToken getSession(String sessionId) {
 
         if(!validSessions.containsKey(sessionId)) {
             LOGGER.trace("Session does not exist, sessionId={}", sessionId);
-            return false;
+            return null;
         }
 
         UserToken retrievedToken = validSessions.get(sessionId);
@@ -58,10 +58,10 @@ public class SessionManager {
             LOGGER.trace("Session is expired, sessionId={}, token={}", sessionId, retrievedToken.getExpiration());
             // token is expired
             validSessions.remove(sessionId);
-            return false;
+            return null;
         }
 
-        return true;
+        return retrievedToken;
     }
 
     public void invalidateSession(String sessionId) {

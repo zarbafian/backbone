@@ -3,14 +3,16 @@ package backbone.entity;
 public class Notification {
 
     private Long id;
+    private String title;
     private String content;
     private NotificationStatus status;
 
     public Notification() {
     }
 
-    public Notification(Long id, String content, NotificationStatus status) {
+    public Notification(Long id, String title, String content, NotificationStatus status) {
         this.id = id;
+        this.title = title;
         this.content = content;
         this.status = status;
     }
@@ -21,6 +23,14 @@ public class Notification {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
     }
 
     public String getContent() {

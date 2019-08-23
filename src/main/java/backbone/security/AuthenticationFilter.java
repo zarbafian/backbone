@@ -38,7 +38,7 @@ public class AuthenticationFilter implements Filter {
             response.setStatus(HttpServletResponse.SC_OK);
             response.setHeader("Access-Control-Allow-Origin", allowedOrigins);
             response.setHeader("Access-Control-Allow-Credentials", "true");
-            response.setHeader("Access-Control-Allow-Headers", "*");
+            response.setHeader("Access-Control-Allow-Headers", "Content-Type");
             response.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
             return;
         }
@@ -69,7 +69,7 @@ public class AuthenticationFilter implements Filter {
                 return;
             }
 
-            if(sessionManager.isValid(token)) {
+            if(sessionManager.getSession(token) != null) {
                 LOGGER.debug("🔑 Authentication success");
                 filterChain.doFilter(servletRequest, servletResponse);
                 return;

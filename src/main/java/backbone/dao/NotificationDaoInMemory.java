@@ -19,8 +19,8 @@ public class NotificationDaoInMemory implements NotificationDao {
 
     @PostConstruct
     public void init() {
-        notifications.add( new Notification(1L, "Hello,\nI need to switch to winter tires.\nBest Regards,\nJohn", NotificationStatus.NEW));
-        notifications.add(new Notification(2L, "Bonjour, Le voyant SERVICE s'est allumé. Paul.", NotificationStatus.NEW));
+        notifications.add( new Notification(1L, "Request", "Hello,\nI need to switch to winter tires.\nBest Regards,\nJohn", NotificationStatus.NEW));
+        notifications.add(new Notification(2L, "Maintenance", "Bonjour, Le voyant SERVICE s'est allumé. Paul.", NotificationStatus.NEW));
     }
 
     @Override
