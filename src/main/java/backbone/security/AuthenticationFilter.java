@@ -18,9 +18,12 @@ public class AuthenticationFilter implements Filter {
 
     private SessionManager sessionManager;
 
-    public AuthenticationFilter(String authenticationCookie, SessionManager sessionManager) {
+    private String allowedOrigins;
+
+    public AuthenticationFilter(String authenticationCookie, SessionManager sessionManager, String allowedOrigins) {
         this.authenticationCookie = authenticationCookie;
         this.sessionManager = sessionManager;
+        this.allowedOrigins = allowedOrigins;
     }
 
     @Override
@@ -28,6 +31,17 @@ public class AuthenticationFilter implements Filter {
 
         HttpServletRequest request = (HttpServletRequest) servletRequest;
         HttpServletResponse response = (HttpServletResponse) servletResponse;
+
+        // Allow OPTIONS
+        if("OPTIONS".equals(request.getMethod())) {
+            LOGGER.debug("✈ Allowing OPTIONS");
+            response.setStatus(HttpServletResponse.SC_OK);
+            response.setHeader("Access-Control-Allow-Origin", allowedOrigins);
+            response.setHeader("Access-Control-Allow-Credentials", "true");
+            response.setHeader("Access-Control-Allow-Headers", "*");
+            response.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
+            return;
+        }
 
         Cookie[] cookies = request.getCookies();
 
@@ -58,6 +72,7 @@ public class AuthenticationFilter implements Filter {
             if(sessionManager.isValid(token)) {
                 LOGGER.debug("🔑 Authentication success");
                 filterChain.doFilter(servletRequest, servletResponse);
+                return;
             }
             else {
                 // invalid authentication header

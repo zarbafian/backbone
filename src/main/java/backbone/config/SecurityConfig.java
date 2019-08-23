@@ -18,6 +18,9 @@ public class SecurityConfig {
     @Value("${security.cookie.name}")
     private String authenticationCookie;
 
+    @Value("${security.cors.origins}")
+    private String allowedOrigins;
+
     @Autowired
     private SessionManager sessionManager;
 
@@ -26,7 +29,7 @@ public class SecurityConfig {
 
         FilterRegistrationBean<AuthenticationFilter> registrationBean = new FilterRegistrationBean<>();
 
-        registrationBean.setFilter(new AuthenticationFilter(authenticationCookie, sessionManager));
+        registrationBean.setFilter(new AuthenticationFilter(authenticationCookie, sessionManager, allowedOrigins));
         registrationBean.addUrlPatterns("/api/*");
 
         return registrationBean;

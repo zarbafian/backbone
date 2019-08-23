@@ -19,11 +19,12 @@ public class CorsConfig {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
                 registry
-                        .addMapping("/*")
+                        .addMapping("/**")
                         .allowedMethods("*")
                         .allowedOrigins(allowedOrigins)
                         .allowCredentials(true)
-                        .allowedHeaders("*");
+                        .allowedHeaders("*")
+                ;
             }
         };
     }
