@@ -1,6 +1,7 @@
 package backbone.config;
 
-import backbone.security.AuthenticationFilter;
+import backbone.security.CookieAuthenticationFilter;
+import backbone.security.HeaderAuthenticationFilter;
 import backbone.security.SessionManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,12 +26,23 @@ public class SecurityConfig {
     private SessionManager sessionManager;
 
     @Bean
-    public FilterRegistrationBean<AuthenticationFilter> authenticationFilter(){
+    public FilterRegistrationBean<CookieAuthenticationFilter> apiAuthenticationFilter(){
 
-        FilterRegistrationBean<AuthenticationFilter> registrationBean = new FilterRegistrationBean<>();
+        FilterRegistrationBean<CookieAuthenticationFilter> registrationBean = new FilterRegistrationBean<>();
 
-        registrationBean.setFilter(new AuthenticationFilter(authenticationCookie, sessionManager, allowedOrigins));
+        registrationBean.setFilter(new CookieAuthenticationFilter(authenticationCookie, sessionManager, allowedOrigins));
         registrationBean.addUrlPatterns("/api/*");
+
+        return registrationBean;
+    }
+
+    @Bean
+    public FilterRegistrationBean<HeaderAuthenticationFilter> mobileAuthenticationFilter(){
+
+        FilterRegistrationBean<HeaderAuthenticationFilter> registrationBean = new FilterRegistrationBean<>();
+
+        registrationBean.setFilter(new HeaderAuthenticationFilter(authenticationCookie, sessionManager, allowedOrigins));
+        registrationBean.addUrlPatterns("/cmc/*");
 
         return registrationBean;
     }

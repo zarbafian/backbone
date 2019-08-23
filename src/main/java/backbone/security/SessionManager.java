@@ -6,6 +6,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.PostConstruct;
 import java.time.ZonedDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.HashMap;
@@ -23,6 +24,15 @@ public class SessionManager {
     private SessionIdGenerator sessionIdGenerator;
 
     private Map<String, UserToken> validSessions = new HashMap<>();
+
+    @PostConstruct
+    public void init() {
+
+        String mySid = "lk1waRs4lHQbQyM3jPBfSaVEsJ9nsx+EtjRNnXQG+Rw=";
+
+        //TODO: FOR TESTING ONLY
+        validSessions.put(mySid, new UserToken("pouriya", ZonedDateTime.now().plus(7, ChronoUnit.DAYS), AccountRole.USER.getValue()));
+    }
 
     public UserSession createSession(Account accountEntity) {
 

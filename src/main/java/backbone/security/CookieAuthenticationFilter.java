@@ -10,9 +10,9 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.*;
 
-public class AuthenticationFilter implements Filter {
+public class CookieAuthenticationFilter implements Filter {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(AuthenticationFilter.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(CookieAuthenticationFilter.class);
 
     private String authenticationCookie;
 
@@ -20,7 +20,7 @@ public class AuthenticationFilter implements Filter {
 
     private String allowedOrigins;
 
-    public AuthenticationFilter(String authenticationCookie, SessionManager sessionManager, String allowedOrigins) {
+    public CookieAuthenticationFilter(String authenticationCookie, SessionManager sessionManager, String allowedOrigins) {
         this.authenticationCookie = authenticationCookie;
         this.sessionManager = sessionManager;
         this.allowedOrigins = allowedOrigins;
