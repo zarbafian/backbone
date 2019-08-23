@@ -16,8 +16,8 @@ public class SessionManager {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(SessionManager.class);
 
-    private static final long SESSION_DURATION_VALUE = 20;
-    private static final ChronoUnit SESSION_DURATION_UNIT = ChronoUnit.MINUTES;
+    private static final long SESSION_DURATION_VALUE = 4;
+    private static final ChronoUnit SESSION_DURATION_UNIT = ChronoUnit.HOURS;
 
     @Autowired
     private SessionIdGenerator sessionIdGenerator;

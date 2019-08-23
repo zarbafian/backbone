@@ -4,13 +4,15 @@ public class Notification {
 
     private Long id;
     private String content;
+    private NotificationStatus status;
 
     public Notification() {
     }
 
-    public Notification(Long id, String content) {
+    public Notification(Long id, String content, NotificationStatus status) {
         this.id = id;
         this.content = content;
+        this.status = status;
     }
 
     public Long getId() {
@@ -27,5 +29,13 @@ public class Notification {
 
     public void setContent(String content) {
         this.content = content;
+    }
+
+    public NotificationStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(NotificationStatus status) {
+        this.status = status;
     }
 }

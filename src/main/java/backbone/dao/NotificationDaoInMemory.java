@@ -1,6 +1,7 @@
 package backbone.dao;
 
 import backbone.entity.Notification;
+import backbone.entity.NotificationStatus;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
@@ -18,8 +19,8 @@ public class NotificationDaoInMemory implements NotificationDao {
 
     @PostConstruct
     public void init() {
-        notifications.add( new Notification(1L, "Hello,\nI need to switch to winter tires.\nBest Regards,\nJohn"));
-        notifications.add(new Notification(2L, "Bonjour, Le voyant SERVICE s'est allumé. Paul."));
+        notifications.add( new Notification(1L, "Hello,\nI need to switch to winter tires.\nBest Regards,\nJohn", NotificationStatus.NEW));
+        notifications.add(new Notification(2L, "Bonjour, Le voyant SERVICE s'est allumé. Paul.", NotificationStatus.NEW));
     }
 
     @Override
@@ -30,6 +31,7 @@ public class NotificationDaoInMemory implements NotificationDao {
     @Override
     public Notification create(Notification notification) {
         notification.setId(nextId.getAndIncrement());
+        notification.setStatus(NotificationStatus.NEW);
         notifications.add(notification);
         return notification;
     }

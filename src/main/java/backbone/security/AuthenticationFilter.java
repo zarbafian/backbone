@@ -31,6 +31,13 @@ public class AuthenticationFilter implements Filter {
 
         Cookie[] cookies = request.getCookies();
 
+        if(cookies == null) {
+            // no authentication header
+            LOGGER.error("🚫 Authentication failure: no authentication cookie");
+            response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
+            return;
+        }
+
         Optional<Cookie> optionalCookie = Arrays.stream(cookies).filter(cookie -> this.authenticationCookie.equals(cookie.getName())).findFirst();
 
         LOGGER.debug("🔒 Attempting authentication");
