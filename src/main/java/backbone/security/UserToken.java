@@ -4,22 +4,22 @@ import java.time.ZonedDateTime;
 
 public class UserToken {
 
-    private String user;
+    private String username;
     private ZonedDateTime expiration;
     private String role;
 
-    public UserToken(String user, ZonedDateTime expiration, String role) {
-        this.user = user;
+    public UserToken(String username, ZonedDateTime expiration, String role) {
+        this.username = username;
         this.expiration = expiration;
         this.role = role;
     }
 
-    public String getUser() {
-        return user;
+    public String getUsername() {
+        return username;
     }
 
-    public void setUser(String user) {
-        this.user = user;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public ZonedDateTime getExpiration() {
@@ -41,7 +41,7 @@ public class UserToken {
     @Override
     public String toString() {
         return "UserToken{" +
-                "user='" + user + '\'' +
+                "user='" + username + '\'' +
                 ", expiration=" + expiration +
                 ", role='" + role + '\'' +
                 '}';
