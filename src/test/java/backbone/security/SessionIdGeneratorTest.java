@@ -17,7 +17,6 @@ public class SessionIdGeneratorTest {
     @Test
     public  void test() {
 
-
         String sessionId = sessionIdGenerator.getSessionId();
         Assert.assertNotNull(sessionId);
     }

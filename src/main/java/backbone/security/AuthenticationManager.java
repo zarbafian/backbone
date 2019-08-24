@@ -10,7 +10,7 @@ public class AuthenticationManager {
 
     public Account authenticate(String username, String password) {
 
-        if("toto".equals(username) && "toto".equals(password)) {
+        if("thomas".equals(username) && "thomas".equals(password)) {
 
             Account entity = new Account();
             entity.setId(1L);
@@ -23,7 +23,7 @@ public class AuthenticationManager {
 
             return entity;
         }
-        else if("titi".equals(username) && "titi".equals(password)) {
+        else if("maximilien".equals(username) && "maximilien".equals(password)) {
 
             Account entity = new Account();
             entity.setId(2L);
@@ -32,7 +32,20 @@ public class AuthenticationManager {
             entity.setCreationDate(LocalDateTime.now());
             entity.setModificationDate(LocalDateTime.now());
             entity.setUsername(username);
-            entity.setRole(AccountRole.USER);
+            entity.setRole(AccountRole.ADMIN);
+
+            return entity;
+        }
+        else if("pouriya".equals(username) && "pouriya".equals(password)) {
+
+            Account entity = new Account();
+            entity.setId(3L);
+            entity.setActive(true);
+            entity.setDeleted(false);
+            entity.setCreationDate(LocalDateTime.now());
+            entity.setModificationDate(LocalDateTime.now());
+            entity.setUsername(username);
+            entity.setRole(AccountRole.ADMIN);
 
             return entity;
         }
