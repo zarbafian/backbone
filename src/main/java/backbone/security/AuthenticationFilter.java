@@ -11,9 +11,9 @@ import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-public class HeaderAuthenticationFilter implements Filter {
+public class AuthenticationFilter implements Filter {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(CookieAuthenticationFilter.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(AuthenticationFilter.class);
 
     private String authenticationHeader;
 
@@ -21,7 +21,7 @@ public class HeaderAuthenticationFilter implements Filter {
 
     private String allowedOrigins;
 
-    public HeaderAuthenticationFilter(String authenticationHeader, SessionManager sessionManager, String allowedOrigins) {
+    public AuthenticationFilter(String authenticationHeader, SessionManager sessionManager, String allowedOrigins) {
         this.authenticationHeader = authenticationHeader;
         this.sessionManager = sessionManager;
         this.allowedOrigins = allowedOrigins;
@@ -39,7 +39,7 @@ public class HeaderAuthenticationFilter implements Filter {
             response.setStatus(HttpServletResponse.SC_OK);
             response.setHeader("Access-Control-Allow-Origin", allowedOrigins);
             response.setHeader("Access-Control-Allow-Credentials", "true");
-            response.setHeader("Access-Control-Allow-Headers", "Content-Type");
+            response.setHeader("Access-Control-Allow-Headers", "Content-Type, sid");
             response.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
             return;
         }

@@ -31,10 +31,10 @@ public class SessionManager {
         String mySid = "lk1waRs4lHQbQyM3jPBfSaVEsJ9nsx+EtjRNnXQG+Rw=";
 
         //TODO: FOR TESTING ONLY
-        validSessions.put(mySid, new UserToken("pouriya", ZonedDateTime.now().plus(7, ChronoUnit.DAYS), AccountRole.USER.getValue()));
+        validSessions.put(mySid, new UserToken("pouriya", mySid, ZonedDateTime.now().plus(7, ChronoUnit.DAYS), AccountRole.USER.getValue()));
     }
 
-    public UserSession createSession(Account accountEntity) {
+    public UserToken createSession(Account accountEntity) {
 
         // session ID
         String sessionId = sessionIdGenerator.getSessionId();
@@ -43,16 +43,13 @@ public class SessionManager {
         ZonedDateTime expiration = ZonedDateTime.now().plus(SESSION_DURATION_VALUE, SESSION_DURATION_UNIT);
 
         // user token
-        UserToken userToken = new UserToken(accountEntity.getUsername(), expiration, accountEntity.getRole().getValue());
+        UserToken userToken = new UserToken(accountEntity.getUsername(), sessionId, expiration, accountEntity.getRole().getValue());
 
         validSessions.put(sessionId, userToken);
 
-        LOGGER.debug("Created new session, sessionId={}, token={}", sessionId, userToken);
+        LOGGER.debug("Created new session, userToken={}", userToken);
 
-        return new UserSession(
-                sessionId,
-                userToken
-        );
+        return userToken;
     }
 
     public UserToken getSession(String sessionId) {

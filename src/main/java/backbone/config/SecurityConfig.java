@@ -1,7 +1,6 @@
 package backbone.config;
 
-import backbone.security.CookieAuthenticationFilter;
-import backbone.security.HeaderAuthenticationFilter;
+import backbone.security.AuthenticationFilter;
 import backbone.security.SessionManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,8 +15,8 @@ public class SecurityConfig {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(SecurityConfig.class);
 
-    @Value("${security.cookie.name}")
-    private String authenticationCookie;
+    @Value("${security.header.name}")
+    private String authenticationHeader;
 
     @Value("${security.cors.origins}")
     private String allowedOrigins;
@@ -26,23 +25,12 @@ public class SecurityConfig {
     private SessionManager sessionManager;
 
     @Bean
-    public FilterRegistrationBean<CookieAuthenticationFilter> apiAuthenticationFilter(){
+    public FilterRegistrationBean<AuthenticationFilter> mobileAuthenticationFilter(){
 
-        FilterRegistrationBean<CookieAuthenticationFilter> registrationBean = new FilterRegistrationBean<>();
+        FilterRegistrationBean<AuthenticationFilter> registrationBean = new FilterRegistrationBean<>();
 
-        registrationBean.setFilter(new CookieAuthenticationFilter(authenticationCookie, sessionManager, allowedOrigins));
+        registrationBean.setFilter(new AuthenticationFilter(authenticationHeader, sessionManager, allowedOrigins));
         registrationBean.addUrlPatterns("/api/*");
-
-        return registrationBean;
-    }
-
-    @Bean
-    public FilterRegistrationBean<HeaderAuthenticationFilter> mobileAuthenticationFilter(){
-
-        FilterRegistrationBean<HeaderAuthenticationFilter> registrationBean = new FilterRegistrationBean<>();
-
-        registrationBean.setFilter(new HeaderAuthenticationFilter(authenticationCookie, sessionManager, allowedOrigins));
-        registrationBean.addUrlPatterns("/cmc/*");
 
         return registrationBean;
     }
